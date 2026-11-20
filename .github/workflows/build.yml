@@ -1,0 +1,104 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  module:
+    name: Module (${{ matrix.suffix }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+            suffix: win64
+            library: mcplink.dll
+          - os: windows-latest
+            target: i686-pc-windows-msvc
+            suffix: win32
+            library: mcplink.dll
+          - os: ubuntu-22.04
+            target: x86_64-unknown-linux-gnu
+            suffix: linux64
+            library: libmcplink.so
+          - os: ubuntu-22.04
+            target: i686-unknown-linux-gnu
+            suffix: linux
+            library: libmcplink.so
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install the Rust target
+        run: rustup target add ${{ matrix.target }}
+
+      - name: Install the 32-bit C toolchain
+        if: matrix.target == 'i686-unknown-linux-gnu'
+        run: sudo apt-get update && sudo apt-get install -y gcc-multilib
+
+      - name: Build
+        run: cargo build --release --locked --manifest-path module/Cargo.toml --target ${{ matrix.target }}
+
+      - name: Name the module for both realms
+        shell: bash
+        run: |
+          mkdir -p dist
+          for realm in gmsv gmcl; do
+            cp "module/target/${{ matrix.target }}/release/${{ matrix.library }}" "dist/${realm}_mcplink_${{ matrix.suffix }}.dll"
+          done
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: module-${{ matrix.suffix }}
+          path: dist/*.dll
+          if-no-files-found: error
+
+  server:
+    name: MCP server
+    runs-on: ubuntu-22.04
+    defaults:
+      run:
+        working-directory: server
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - run: npm ci
+
+      - run: npm run build
+
+  release:
+    name: Release
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [module, server]
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          pattern: module-*
+          merge-multiple: true
+
+      - name: Package the addon
+        run: cd addon && zip -r ../dist/mcplink-addon.zip .
+
+      - name: Publish the files
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release view "$GITHUB_REF_NAME" > /dev/null 2>&1 || gh release create "$GITHUB_REF_NAME" --title "$GITHUB_REF_NAME" --notes ""
+          gh release upload "$GITHUB_REF_NAME" dist/* --clobber
