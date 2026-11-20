@@ -1,0 +1,19 @@
+[package]
+name = "mcplink"
+version = "0.1.0"
+edition = "2021"
+description = "Garry's Mod binary module that gives Lua a loopback socket for MCP servers"
+license = "MIT"
+publish = false
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+getrandom = "0.3"
+libloading = "0.8"
+
+[profile.release]
+opt-level = "s"
+lto = true
+strip = true
