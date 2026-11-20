@@ -24,7 +24,7 @@ Version 0.1.00, pre-production. The module, the bridge and the server have been 
 
 You need Node.js 20 or newer for the server.
 
-1. **Module.** Download the DLLs for your platform from the [latest release](../../releases/latest) and put them in `garrysmod/lua/bin/` (create the folder if it does not exist). `gmsv_` files serve the server realm and `gmcl_` files the client realm; the suffix must match the game build:
+1. **Module.** Download the DLLs for your platform from the newest entry on the [releases page](../../releases) and put them in `garrysmod/lua/bin/` (create the folder if it does not exist). `gmsv_` files serve the server realm and `gmcl_` files the client realm; the suffix must match the game build:
 
    | Game build | Files |
    | --- | --- |
