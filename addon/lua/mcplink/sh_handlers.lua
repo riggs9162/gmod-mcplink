@@ -114,6 +114,13 @@ local function Traceback(message)
     return bridgeStart and string.sub(trace, 1, bridgeStart - 1) or trace
 end
 
+--- Gathers every value passed in, keeping trailing nils countable.
+---@param ... any Values to gather.
+---@return table values The values in order, with their count in `n`.
+local function Collect(...)
+    return {n = select("#", ...), ...}
+end
+
 --- Runs a chunk of Lua and reports what it returned and printed.
 ---@realm shared
 ---@param code string Lua source to run.
@@ -126,7 +133,7 @@ function mcpBridge.RunLua(code)
 
     local output = {}
     local restore = CaptureOutput(output)
-    local results = table.Pack(xpcall(chunk, Traceback))
+    local results = Collect(xpcall(chunk, Traceback))
     restore()
 
     local returns = {}
