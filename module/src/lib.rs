@@ -10,7 +10,7 @@ use link::Link;
 use lua::{CFunction, State};
 
 /// Module version reported to Lua.
-const VERSION: &str = "0.1.00";
+const VERSION: &str = "0.1.01";
 
 static LINK: Mutex<Option<Link>> = Mutex::new(None);
 

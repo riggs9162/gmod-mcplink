@@ -10,7 +10,7 @@ use std::thread::{self, JoinHandle};
 use std::time::{Duration, Instant};
 
 /// Line sent to a connection once its token has been accepted.
-const HELLO: &[u8] = b"{\"hello\":\"mcplink\",\"version\":\"0.1.00\"}\n";
+const HELLO: &[u8] = b"{\"hello\":\"mcplink\",\"version\":\"0.1.01\"}\n";
 
 /// How long background threads wait before checking whether the link is shutting down.
 const TICK: Duration = Duration::from_millis(100);

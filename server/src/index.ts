@@ -136,7 +136,7 @@ async function describeLog(realm: Realm): Promise<string> {
   }
 }
 
-const server = new McpServer({ name: "gmod-mcplink", version: "0.1.0" });
+const server = new McpServer({ name: "gmod-mcplink", version: "0.1.1" });
 
 server.registerTool(
   "gmod_status",

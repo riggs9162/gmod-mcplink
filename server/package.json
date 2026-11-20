@@ -1,6 +1,6 @@
 {
   "name": "gmod-mcplink-server",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "MCP server that drives a running Garry's Mod game through the mcplink socket module",
   "license": "MIT",
   "private": true,

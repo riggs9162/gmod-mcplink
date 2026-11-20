@@ -1,6 +1,6 @@
 [package]
 name = "mcplink"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 description = "Garry's Mod binary module that gives Lua a loopback socket for MCP servers"
 license = "MIT"
