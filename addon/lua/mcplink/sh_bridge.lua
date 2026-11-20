@@ -115,6 +115,10 @@ function mcpBridge.Start()
 
     if ( SERVER ) then
         RunConsoleCommand("sv_hibernate_think", "1")
+    else
+        hook.Add("PreRender", "mcpBridge.PreRender", function()
+            mcpBridge.Pump()
+        end)
     end
 
     mcpBridge.bRunning = true
@@ -126,6 +130,7 @@ end
 ---@realm shared
 function mcpBridge.Stop()
     hook.Remove("Think", "mcpBridge.Think")
+    hook.Remove("PreRender", "mcpBridge.PreRender")
     hook.Remove("ShutDown", "mcpBridge.ShutDown")
 
     if ( istable(mcplink) ) then
