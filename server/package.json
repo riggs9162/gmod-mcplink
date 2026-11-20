@@ -1,0 +1,25 @@
+{
+  "name": "gmod-mcplink-server",
+  "version": "0.1.0",
+  "description": "MCP server that drives a running Garry's Mod game through the mcplink socket module",
+  "license": "MIT",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "gmod-mcplink": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "typescript": "^5.9.0"
+  }
+}
